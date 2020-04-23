@@ -1,4 +1,4 @@
-============= SWARM SETUP =================
+============= SWARM SERVER SETUP =================
 
 sudo apt update
 sudo apt install apache2 -y
@@ -39,30 +39,35 @@ sudo systemctl restart apache2
 ----------- ON P4D Host --------------
 
 sudo apt install curl wget helix-swarm-triggers -y
-nano /opt/perforce/etc/swarm-trigger.conf              (Set SWARM_HOST, SWARM_TOKEN from web interface -> About Swarm, P4_PORT)
+nano /opt/perforce/etc/swarm-trigger.conf              (Set SWARM_HOST, SWARM_TOKEN from web interface: Login as superuser -> About Swarm, P4_PORT)
 chmod +x /opt/perforce/swarm-triggers/bin/swarm-trigger.pl
 
 <--- FINISH HTTPS STEPS IF HTTPS IS USED
 
 /opt/perforce/swarm-triggers/bin/swarm-trigger.pl -t ping -v 0
 
------------- ON CLIENT -------------------
+------------ ON ANY CLIENT -------------------
 p4 triggers   - copy triggers file
 p4 configure set dm.shelve.promote=1
 p4 configure set dm.keys.hide=2
 p4 configure set filetype.bypasslock=1
 
-OPTIONAL - P4V Swarm integration
+- OPTIONAL - P4V Swarm integration
 
 p4 property -a -n P4.Swarm.URL -v https://test.ondrejhrusovsky.com/
 
 =================================================
----OPTIONAL--- HTTPS ---------ON SWARM HOST--------
+---OPTIONAL--- HTTPS ---------ON SWARM SERVER HOST--------
 sudo a2enmod ssl
-
 sudo mkdir -p /etc/apache2/ssl
 cd /etc/apache2/ssl
-sudo openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout apache.key -out apache.crt
+
+IF YOU HAVE CUSTOM SSL CERTIFICATE
+    copy it to /etc/apache2/ssl including ca_bundle
+ELSE
+    generate unsigned certificate:
+    sudo openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout certificate.key -out certificate.crt
+
 sudo chmod 600 /etc/apache2/ssl
 nano /etc/apache2/sites-available/perforce-swarm-site.conf
 
@@ -81,8 +86,8 @@ nano /etc/apache2/sites-available/perforce-swarm-site.conf
 
 <VirtualHost *:443>
     SSLEngine on
-    SSLCertificateFile /etc/apache2/ssl/apache.crt
-    SSLCertificateKeyFile /etc/apache2/ssl/apache.key
+    SSLCertificateFile /etc/apache2/ssl/certificate.crt
+    SSLCertificateKeyFile /etc/apache2/ssl/certificate.key
     SSLCertificateChainFile /etc/apache2/ssl/ca_bundle.crt
 
     ServerName test.ondrejhrusovsky.com
@@ -96,26 +101,7 @@ nano /etc/apache2/sites-available/perforce-swarm-site.conf
     </Directory>
 </VirtualHost>
 
-
 sudo apachectl restart
-
----OPTIONAL--- JIRA ---------
-
-nano /out/perforce/swarm/data/config.php
-
- 'jira' => array(
-        'host'      => 'https://xxxxx.atlassian.net:443', // URL for your installed JIRA web interface
-        'user'      => 'ondrej.hrus@gmail.com', // the username required for JIRA API access
-        'password'  => 'TOKEN_FOR_ATLASSIAN', // the password required for JIRA API access
-        'job_field' => 'DTG_DTISSUE', // optional, if P4DTG is replicating JIRA issue IDs
-                           // to a job field, list that field here
-        'link_to_jobs'    => true, // set to true to enable Perforce job links in JIRA, P4DTG and job_field required
-        'delay_job_links' => 60, // delay in seconds, defaults to 60 seconds
-        'relationship'    => '', // subsection name for Perforce job links
-                                 // defaults to empty, Perforce job links added to the "links to" subsection
-    ),
-
-curl -u "admin:admin" -X DELETE "https://swarm.ondrejhrusovsky.com/api/v9/cache/config/"
 
 ---OPTIONAL--- FIREWALL -------
 apt install ufw
@@ -140,4 +126,9 @@ add
         ),
     ),
 
-curl -u "admin:admin" -X DELETE "https://swarm.ondrejhrusovsky.com/api/v9/cache/config/"
+curl -u "admin:adminpassword" -X DELETE "https://swarm.ondrejhrusovsky.com/api/v9/cache/config/"
+
+
+-----OPTIONAL---- configure email server
+nano /opt/perforce/swarm/data/config.php
+https://www.perforce.com/manuals/swarm/Content/Swarm/admin.email.html

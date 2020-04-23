@@ -25,3 +25,22 @@ USE FIRST PART OF JIRA EMAIL AS USERNAME OTHERWISE CRASHING!
 	<JiraHandling>
 	      <UserStyle>name,emailshort,displayname,email</UserStyle>
 	</JiraHandling>
+
+
+---CONFIGURE JIRA ON SWARM HOST---
+
+nano /out/perforce/swarm/data/config.php
+
+ 'jira' => array(
+        'host'      => 'https://xxxxx.atlassian.net:443', // URL for your installed JIRA web interface
+        'user'      => 'ondrej.hrus@gmail.com', // the username required for JIRA API access
+        'password'  => 'TOKEN_FOR_ATLASSIAN', // the password required for JIRA API access
+        'job_field' => 'DTG_DTISSUE', // optional, if P4DTG is replicating JIRA issue IDs
+                           // to a job field, list that field here
+        'link_to_jobs'    => true, // set to true to enable Perforce job links in JIRA, P4DTG and job_field required
+        'delay_job_links' => 60, // delay in seconds, defaults to 60 seconds
+        'relationship'    => '', // subsection name for Perforce job links
+                                 // defaults to empty, Perforce job links added to the "links to" subsection
+    ),
+
+curl -u "admin:admin" -X DELETE "https://swarm.ondrejhrusovsky.com/api/v9/cache/config/"
