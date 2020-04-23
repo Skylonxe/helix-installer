@@ -132,4 +132,43 @@ curl -u "admin:adminpassword" -X DELETE "https://swarm.ondrejhrusovsky.com/api/v
 -----OPTIONAL---- configure email server
 apt install sendmail -y
 nano /opt/perforce/swarm/data/config.php
-https://www.perforce.com/manuals/swarm/Content/Swarm/admin.email.html
+
+Configure smtp server:
+
+'mail' => array(
+        // 'sender' => 'swarm@my.domain',   // defaults to 'notifications@hostname'
+        'transport' => array(
+            'name' => 'localhost',          // name of SMTP host
+            'host' => '127.0.0.1',          // host/IP of SMTP host
+            'port' => 587,                  // SMTP host listening port
+            'connection_class'  => 'plain', // 'smtp', 'plain', 'login', 'crammd5'
+            'connection_config' => array(   // include when auth required to send
+                'username'  => 'user',      // user on SMTP host
+                'password'  => 'pass',      // password for user on SMTP host
+                'ssl'       => 'tls',       // empty, 'tls', or 'ssl'
+            ),
+
+            // override email deliveries and store all messages in this path
+            // 'path' => '/var/spool/swarm',
+        ),
+        
+        // override regular recipients; send email only to these addresses
+        // 'recipients' => array(
+        //     'user1@my.domain',
+        //     'user2@my.domain',
+        // ),
+
+        // send notifications of comments to comment authors?
+        'notify_self' => false,
+
+        // blind carbon-copy recipients
+        // 'use_bcc' => true,
+
+        // suppress reply-to header
+        // 'use_replyto' => false,
+
+        // change the email subject prefix, the default prefix is '[Swarm]'
+        //'subject_prefix' => '[Swarm]',	
+    ),
+
+
