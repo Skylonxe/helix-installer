@@ -1,0 +1,143 @@
+============= SWARM SETUP =================
+
+sudo apt update
+sudo apt install apache2 -y
+sudo a2enmod rewrite
+sudo systemctl restart apache2
+sudo apt-get install software-properties-common -y
+sudo apt install gpg -y
+
+UBUNTU
+sudo add-apt-repository ppa:ondrej/php
+
+DEBIAN
+sudo apt install apt-transport-https lsb-release ca-certificates -y
+sudo wget -O /etc/apt/trusted.gpg.d/php.gpg https://packages.sury.org/php/apt.gpg
+sudo sh -c 'echo "deb https://packages.sury.org/php/ $(lsb_release -sc) main" > /etc/apt/sources.list.d/php.list'
+
+sudo apt update
+sudo apt install php7.2 libapache2-mod-php7.2 -y
+printf "<IfModule mod_dir.c>\n        DirectoryIndex index.php index.html index.cgi index.pl index.xhtml index.htm\n</IfModule>\n" > /etc/apache2/mods-enabled/dir.conf
+sudo systemctl restart apache2
+apt install php-imagick -y
+apt install php-json -y
+echo "deb http://package.perforce.com/apt/ubuntu/ bionic release" > /etc/apt/sources.list.d/perforce.list
+wget -qO - https://package.perforce.com/perforce.pubkey | sudo apt-key add -
+sudo apt-get update
+sudo apt-get install helix-swarm -y
+sudo apt-get install helix-swarm-optional -y
+sudo /opt/perforce/swarm/sbin/configure-swarm.sh
+sudo a2dissite 000-default
+
+IF P4D USES SSL
+    printf "; P4PHP Extension (for Helix Swarm)\nextension=/opt/perforce/swarm/p4-bin/bin.linux26x86_64/perforce-php72-ssl1.1.1.so" > /etc/php/7.2/apache2/conf.d/20-perforce.ini
+IF SWARM USES HTTPS:
+    printf "# Helix Swarm cron configuration\n#\n# Format (one per line):\n# [http[s]://]<swarm-host>[:<port>][/<base-url>]\n#\nhttps://swarm.ondrejhrusovsky.com\n" > /opt/perforce/etc/swarm-cron-hosts.conf
+sudo systemctl reload apache2
+sudo systemctl restart apache2
+
+----------- ON P4D Host --------------
+
+sudo apt install curl wget helix-swarm-triggers -y
+nano /opt/perforce/etc/swarm-trigger.conf              (Set SWARM_HOST, SWARM_TOKEN from web interface -> About Swarm, P4_PORT)
+chmod +x /opt/perforce/swarm-triggers/bin/swarm-trigger.pl
+
+<--- FINISH HTTPS STEPS IF HTTPS IS USED
+
+/opt/perforce/swarm-triggers/bin/swarm-trigger.pl -t ping -v 0
+
+------------ ON CLIENT -------------------
+p4 triggers   - copy triggers file
+p4 configure set dm.shelve.promote=1
+p4 configure set dm.keys.hide=2
+p4 configure set filetype.bypasslock=1
+
+OPTIONAL - P4V Swarm integration
+
+p4 property -a -n P4.Swarm.URL -v https://test.ondrejhrusovsky.com/
+
+=================================================
+---OPTIONAL--- HTTPS ---------ON SWARM HOST--------
+sudo a2enmod ssl
+
+sudo mkdir -p /etc/apache2/ssl
+cd /etc/apache2/ssl
+sudo openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout apache.key -out apache.crt
+sudo chmod 600 /etc/apache2/ssl
+nano /etc/apache2/sites-available/perforce-swarm-site.conf
+
+<VirtualHost *:80>
+    ServerName test.ondrejhrusovsky.com
+    ErrorLog "/var/log/apache2/swarm.error_log"
+    CustomLog "/var/log/apache2/swarm.access_log" common
+    DocumentRoot "/opt/perforce/swarm/public"
+
+    <Directory "/opt/perforce/swarm/public">
+        AllowOverride All
+        Require all granted
+    </Directory>
+    Redirect / https://test.ondrejhrusovsky.com
+</VirtualHost>
+
+<VirtualHost *:443>
+    SSLEngine on
+    SSLCertificateFile /etc/apache2/ssl/apache.crt
+    SSLCertificateKeyFile /etc/apache2/ssl/apache.key
+    SSLCertificateChainFile /etc/apache2/ssl/ca_bundle.crt
+
+    ServerName test.ondrejhrusovsky.com
+    ErrorLog "/var/log/apache2/swarm.error_log"
+    CustomLog "/var/log/apache2/swarm.access_log" common
+    DocumentRoot "/opt/perforce/swarm/public"
+
+    <Directory "/opt/perforce/swarm/public">
+        AllowOverride All
+        Require all granted
+    </Directory>
+</VirtualHost>
+
+
+sudo apachectl restart
+
+---OPTIONAL--- JIRA ---------
+
+nano /out/perforce/swarm/data/config.php
+
+ 'jira' => array(
+        'host'      => 'https://xxxxx.atlassian.net:443', // URL for your installed JIRA web interface
+        'user'      => 'ondrej.hrus@gmail.com', // the username required for JIRA API access
+        'password'  => 'TOKEN_FOR_ATLASSIAN', // the password required for JIRA API access
+        'job_field' => 'DTG_DTISSUE', // optional, if P4DTG is replicating JIRA issue IDs
+                           // to a job field, list that field here
+        'link_to_jobs'    => true, // set to true to enable Perforce job links in JIRA, P4DTG and job_field required
+        'delay_job_links' => 60, // delay in seconds, defaults to 60 seconds
+        'relationship'    => '', // subsection name for Perforce job links
+                                 // defaults to empty, Perforce job links added to the "links to" subsection
+    ),
+
+curl -u "admin:admin" -X DELETE "https://swarm.ondrejhrusovsky.com/api/v9/cache/config/"
+
+---OPTIONAL--- FIREWALL -------
+apt install ufw
+ufw allow ssh
+ufw allow 443
+ufw allow 80
+ufw allow 1666
+ufw enable
+
+-----OPTIONAL---- dev changelist cleanup---- (otherwise shelved completed reviews will last as shelved changelists on pc)
+https://www.perforce.com/manuals/swarm/Content/Swarm/admin.review_cleanup.html?Highlight=cleanup
+
+nano /opt/perforce/swarm/data/config.php
+
+add
+
+    'reviews' => array(
+        'cleanup'              => array(
+            'mode'        => 'user', // auto - follow default, user - present checkbox(with default)
+            'default'     => true,  // clean up pending changelists on commit
+            'reopenFiles' => false,   // re-open any opened files into the default changelist
+        ),
+    ),
+
+curl -u "admin:admin" -X DELETE "https://swarm.ondrejhrusovsky.com/api/v9/cache/config/"

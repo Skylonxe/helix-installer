@@ -1,0 +1,118 @@
+<?xml version="1.0" ?>
+<DTGConfiguration
+    version="1"
+    updated="2020/04/20 16:15:38 UTC">
+    <DataMapping
+        id="JIRA"
+        scm_id="P4V"
+        dts_id="Jira"
+        mirror_conflicts="ERROR">
+        <FixRule
+            dts_field="Fix"
+            copy_type="APPEND"
+            file_list="0"
+            change_number="1"
+            description="1"
+            fixed_by="1"
+            fixed_date="1" />
+        <DtsToScmRules>
+            <CopyRule
+                scm_field="Status"
+                dts_field="Status"
+                copy_type="MAP"
+                mirror_conflicts="DTS"
+                truncate="0">
+                <CopyMap
+                    value1="Done"
+                    value2="done" />
+                <CopyMap
+                    value1="In Review"
+                    value2="in-review" />
+                <CopyMap
+                    value1="To Do"
+                    value2="todo" />
+                <CopyMap
+                    value1="In Progress"
+                    value2="in-progress" />
+            </CopyRule>
+            <CopyRule
+                scm_field="User"
+                dts_field="Reporter"
+                copy_type="WORD"
+                mirror_conflicts="DTS"
+                truncate="0" />
+            <CopyRule
+                scm_field="Assignee"
+                dts_field="Assignee"
+                copy_type="WORD"
+                mirror_conflicts="DTS"
+                truncate="0" />
+            <CopyRule
+                scm_field="Comments"
+                dts_field="Comments"
+                copy_type="TEXT"
+                mirror_conflicts="DTS"
+                truncate="0" />
+            <CopyRule
+                scm_field="LongDescription"
+                dts_field="Description"
+                copy_type="TEXT"
+                mirror_conflicts="DTS"
+                truncate="0" />
+            <CopyRule
+                scm_field="Description"
+                dts_field="Summary"
+                copy_type="TEXT"
+                mirror_conflicts="DTS"
+                truncate="0" />
+            <CopyRule
+                scm_field="Sprint"
+                dts_field="Sprint"
+                copy_type="LINE"
+                mirror_conflicts="DTS"
+                truncate="0" />
+            <CopyRule
+                scm_field="Priority"
+                dts_field="Priority"
+                copy_type="MAP"
+                mirror_conflicts="DTS"
+                truncate="0">
+                <CopyMap
+                    value1="Lowest"
+                    value2="lowest" />
+                <CopyMap
+                    value1="Low"
+                    value2="low" />
+                <CopyMap
+                    value1="Medium"
+                    value2="medium" />
+                <CopyMap
+                    value1="High"
+                    value2="high" />
+                <CopyMap
+                    value1="Highest"
+                    value2="highest" />
+            </CopyRule>
+            <CopyRule
+                scm_field="UpdatedDate"
+                dts_field="Updated"
+                copy_type="DATE"
+                mirror_conflicts="DTS"
+                truncate="0" />
+            <CopyRule
+                scm_field="DueDate"
+                dts_field="Due Date"
+                copy_type="DATE"
+                mirror_conflicts="DTS"
+                truncate="0" />
+        </DtsToScmRules>
+        <Attributes>
+            <DataAttr
+                name="wait_duration"
+                value="5" />
+            <DataAttr
+                name="polling_period"
+                value="2" />
+        </Attributes>
+    </DataMapping>
+</DTGConfiguration>

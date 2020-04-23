@@ -1,0 +1,15 @@
+<?xml version="1.0" ?>
+<DTGConfiguration
+    version="1"
+    updated="2020/04/17 15:41:49 UTC">
+    <DataSource
+        type="DTS"
+        plugin="JIRA-REST"
+        nickname="Jira"
+        server="https://economywars.atlassian.net:443"
+        user="ondrej.hrus@gmail.com"
+        epassword="67676D570D0A0A7E18407A3A64623F411D2376201F255A30391A1B0024471C043E534655790106153A1A484E650C110E24061F183D0800126408060D2B1A0108"
+        module="*all*"
+        moddate_field="Updated"
+        moduser_field="*Not Supported*" />
+</DTGConfiguration>

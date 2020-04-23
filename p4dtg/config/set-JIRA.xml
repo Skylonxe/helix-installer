@@ -1,0 +1,36 @@
+<?xml version="1.0" ?>
+<DTGGateway
+    version="1"
+    updated="2020/04/20 11:02:07 UTC">
+    <DTGSettings
+        id="JIRA"
+        force="0">
+        <LastUpdateSCM>
+            <Date
+                year="2020"
+                month="4"
+                day="20"
+                hour="11"
+                minute="2"
+                second="5" />
+        </LastUpdateSCM>
+        <LastUpdateDTS>
+            <Date
+                year="2020"
+                month="4"
+                day="20"
+                hour="13"
+                minute="2"
+                second="5" />
+        </LastUpdateDTS>
+        <StartingDate>
+            <Date
+                year="2020"
+                month="4"
+                day="16"
+                hour="13"
+                minute="0"
+                second="0" />
+        </StartingDate>
+    </DTGSettings>
+</DTGGateway>

@@ -1,0 +1,27 @@
+cd /home/perforce
+wget http://ftp.perforce.com/perforce/r18.1/bin.linux26x86_64/p4dtg.tgz
+tar zxvf p4dtg.tgz
+rm p4dtg.tgz
+mv p4dtg-* p4dtg
+sudo apt install default-jre -y
+
+APPLY P4DTG JIRA API PATCH (https://forums.perforce.com/index.php?/topic/6501-p4dtg-jira-not-working-statuscodeoptionalabsent/)
+copy jira folder to server and override it
+
+APPLY P4DTG CONFIG (created on PC with GUI)
+copy config folder to server and override it
+
+chmod -R +w p4dtg
+chown perforce p4dtg -R
+
+CLIENT
+
+p4 jobspec
+<- copy content of jobspec file into opened txt editor
+
+USE FIRST PART OF JIRA EMAIL AS USERNAME OTHERWISE CRASHING!
+	add to jira-rest-config.xml :
+<Config>
+	<JiraHandling>
+	      <UserStyle>name,emailshort,displayname,email</UserStyle>
+	</JiraHandling>

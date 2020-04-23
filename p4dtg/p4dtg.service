@@ -1,0 +1,34 @@
+# Perforce systemd file (p4d.service):
+#
+# This service file will start P4DTG at boot, and
+# provide everything needed to use systemctl to control
+# the P4DTG process.
+
+[Unit]
+# Note that descriptions are limited to 80 characters:
+Description=P4DTG
+
+# Starts P4DTG only after the network services are 
+# ready:
+After=network.target
+
+[Service]
+Type=simple
+
+# Set the system user used to launch this process (usually
+# 'perforce':
+User=perforce
+WorkingDirectory=/home/perforce/p4dtg/
+Restart=on-abnormal
+# The command used to start Perforce:
+ExecStartPre=/usr/bin/rm -f /home/perforce/p4dtg/repl/run-JIRA
+ExecStart=/home/perforce/p4dtg/p4dtg-repl JIRA
+ExecStop=/usr/bin/touch /home/perforce/p4dtg/repl/stop-JIRA
+
+# Taming the Out of Memory Killer (oomkiller) Daemon
+OOMScoreAdjust=-500
+
+[Install]
+# Describes the target for this service -- this will always
+# be 'multi-user.target':
+WantedBy=multi-user.target

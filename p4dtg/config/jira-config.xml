@@ -1,0 +1,100 @@
+<?xml version="1.0"?>
+<!-- This is a configuration file for custom fields and workflows -->
+
+<!-- XML is inherently case-sensitive and parsers enforce case sensitivity -->
+<!-- Use camel case naming convention for XML elements -->
+<!-- Upper camel case element names -->
+<!-- Lower camel case attribute names -->
+
+<!-- Data Types: LINE, TEXT, DATE, SELECT -->
+<!-- Data Access: RO - Read Only, RW - Read and Write -->
+
+<!-- Note: Custom field names MUST be unique -->
+<!-- See Sample Definitions of Custom Fields -->
+
+<!-- Important: Delete the default JIRA workflow if you are not using it -->
+
+<!-- See the README.txt in the 'doc/jira' directory for more information -->
+
+<Config>
+  <CustomFields>
+
+    <!--/////// Sample Custom Fields //////////////
+
+    <CustomField name="Test Custom Field Line" type="LINE" access="RW" />
+
+    <CustomField name="Test Custom Field Text" type="TEXT" access="RW" />
+
+    <CustomField name="Test Custom Field Date" type="DATE" access="RO" />
+
+    <CustomField name="Test Custom Field Radio" type="SELECT" access="RO">
+      <Option value="Radio 1" />
+      <Option value="Radio 2" />
+      <Option value="Radio 3" />
+    </CustomField>
+
+    <CustomField name="Test Custom Field Select" type="SELECT" access="RW">
+      <Option value="Option 1" />
+      <Option value="Option 2" />
+      <Option value="Option 3" />
+    </CustomField>
+
+    /////////////////////////////////////////// -->
+
+  </CustomFields>
+
+  <Workflows>
+    <!--/////////////////////////////////////////// -->
+    <!--/////// Insert Custom Workflows /////////// -->
+    <!--/////////////////////////////////////////// -->
+    <!--/////// BEGIN Custom Workflow ///////////// -->
+
+
+
+    <!--/////// END Custom Workflow /////////////// -->
+
+    <!--************************************************************ -->
+    <!--* Delete the default JIRA workflow if you are not using it * -->
+    <!--************************************************************ -->
+
+    <!--/////////////////////////////////////////// -->
+    <!--/////// The Default JIRA Workflow ///////// -->
+    <!--/////////////////////////////////////////// -->
+    <Workflow name="jira">
+
+      <ResolutionTransitions>
+        <ResolutionTransition name="Resolve Issue" />
+        <ResolutionTransition name="Close Issue" />
+      </ResolutionTransitions>
+
+      <Step name="Open" linkedStatus="Open">
+        <Transition name="Start Progress" destinationStep="In Progress" />
+        <Transition name="Resolve Issue" destinationStep="Resolved" />
+        <Transition name="Close Issue" destinationStep="Closed" />
+      </Step>
+
+      <Step name="In Progress" linkedStatus="In Progress">
+        <Transition name="Stop Progress" destinationStep="Open" />
+        <Transition name="Resolve Issue" destinationStep="Resolved" />
+        <Transition name="Close Issue" destinationStep="Closed" />
+      </Step>
+
+      <Step name="Resolved" linkedStatus="Resolved">
+        <Transition name="Close Issue" destinationStep="Closed" />
+        <Transition name="Reopen Issue" destinationStep="Reopened" />
+      </Step>
+
+      <Step name="Reopened" linkedStatus="Reopened">
+        <Transition name="Resolve Issue" destinationStep="Resolved" />
+        <Transition name="Close Issue" destinationStep="Closed" />
+        <Transition name="Start Progress" destinationStep="In Progress" />
+      </Step>
+
+      <Step name="Closed" linkedStatus="Closed">
+        <Transition name="Reopen Issue" destinationStep="Reopened" />
+      </Step>
+
+    </Workflow>
+
+  </Workflows>
+</Config>

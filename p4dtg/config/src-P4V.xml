@@ -1,0 +1,27 @@
+<?xml version="1.0" ?>
+<DTGConfiguration
+    version="1"
+    updated="2020/04/20 16:15:52 UTC">
+    <DataSource
+        type="SCM"
+        plugin="Perforce Jobs"
+        nickname="P4V"
+        server="ssl:swarm.ondrejhrusovsky.com:1666"
+        user="jira"
+        epassword="492E480B472131463B7E5B383446333A5C2425473926473D291A353F596C6102606647253C0E252755243D1A393E5024355E3E2241253F42253B4D78335B3B6A"
+        module="Jobs"
+        moddate_field="ModDate"
+        moduser_field="ModBy">
+        <Attributes>
+            <DataAttr
+                name="charset"
+                value="iso8859-15" />
+            <DataAttr
+                name="sub_missing"
+                value="y" />
+            <DataAttr
+                name="gen_jobname"
+                value="y" />
+        </Attributes>
+    </DataSource>
+</DTGConfiguration>
