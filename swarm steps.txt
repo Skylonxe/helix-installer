@@ -130,5 +130,6 @@ curl -u "admin:adminpassword" -X DELETE "https://swarm.ondrejhrusovsky.com/api/v
 
 
 -----OPTIONAL---- configure email server
+apt install sendmail -y
 nano /opt/perforce/swarm/data/config.php
 https://www.perforce.com/manuals/swarm/Content/Swarm/admin.email.html
