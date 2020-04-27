@@ -1,35 +1,44 @@
+----------- P4 CLIENT (with GUI support) --------------
+(superuser should be logged in with environement variables set)
+p4 jobspec
+<- copy content of jobspec file into opened txt editor
+
+----------- P4DTG HOST (with GUI support) -------------
+install P4DTG (requires java)
+copy attached config folder to its install location (it is good starting point for configuration, some fields like Status can depend on user language settings)
+
+add to jira-rest-config.xml if it is not there (Otherwise swarm is crashing because of @ in username) :
+<Config>
+	<JiraHandling>
+	      <UserStyle>name,emailshort,displayname,email</UserStyle>
+	</JiraHandling>
+
+apply p4dtg jira patch
+adjust confiugration using p4dtg config exe (requires run as admin)
+test if replication works correctly (I had to stop service manually in windows services and change user from local service account to the actual user, Sync from start date checkbox enabled)
+stop replication
+
+----------- P4DTG HOST (IF USING LINUX) -------------
 cd /home/perforce
 wget http://ftp.perforce.com/perforce/r18.1/bin.linux26x86_64/p4dtg.tgz
 tar zxvf p4dtg.tgz
 rm p4dtg.tgz
 mv p4dtg-* p4dtg
 sudo apt install default-jre -y
-
-APPLY P4DTG JIRA API PATCH (https://forums.perforce.com/index.php?/topic/6501-p4dtg-jira-not-working-statuscodeoptionalabsent/)
-copy jira folder to server and override it
-
-APPLY P4DTG CONFIG (created on PC with GUI)
-copy config folder to server and override it
-
+apply p4dtg jira patch (https://forums.perforce.com/index.php?/topic/6501-p4dtg-jira-not-working-statuscodeoptionalabsent/) (copy jira folder to server and override it)
+copy p4dtg config from GUI machine to this host
+cd /home/perforce
 chmod -R +w p4dtg
 chown perforce p4dtg -R
+cd /etc/systemd/system
+wget https://raw.githubusercontent.com/Skylonxe/helix-installer/master/p4dtg/p4dtg.service
+sudo systemctl daemon-reload
+sudo systemctl enable p4dtg
+sudo systemctl restart p4dtg
 
-CLIENT
+---------- SWARM HOST (IF USING SWARM) --------------
 
-p4 jobspec
-<- copy content of jobspec file into opened txt editor
-
-USE FIRST PART OF JIRA EMAIL AS USERNAME OTHERWISE CRASHING!
-	add to jira-rest-config.xml :
-<Config>
-	<JiraHandling>
-	      <UserStyle>name,emailshort,displayname,email</UserStyle>
-	</JiraHandling>
-
-
----CONFIGURE JIRA ON SWARM HOST---
-
-nano /out/perforce/swarm/data/config.php
+nano /opt/perforce/swarm/data/config.php
 
  'jira' => array(
         'host'      => 'https://xxxxx.atlassian.net:443', // URL for your installed JIRA web interface
@@ -44,3 +53,4 @@ nano /out/perforce/swarm/data/config.php
     ),
 
 curl -u "admin:admin" -X DELETE "https://swarm.ondrejhrusovsky.com/api/v9/cache/config/"
+systemctl restart apache2

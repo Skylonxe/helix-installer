@@ -171,4 +171,12 @@ Configure smtp server:
         //'subject_prefix' => '[Swarm]',	
     ),
 
+<----- CLEAR CACHE
+
+-----OPTIONAL----- configure global default notifications
+https://www.perforce.com/manuals/swarm/Content/Swarm/admin.notifications.html#admin.notifications.global
+nano /opt/perforce/swarm/data/config.php
+<----- CONFIGURE USING LINK
+<----- CLEAR CACHE
+
 

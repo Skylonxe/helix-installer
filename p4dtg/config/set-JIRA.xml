@@ -4,10 +4,10 @@
     updated="2020/04/20 11:02:07 UTC">
     <DTGSettings
         id="JIRA"
-        force="0">
+        force="1">
         <LastUpdateSCM>
             <Date
-                year="2020"
+                year="2019"
                 month="4"
                 day="20"
                 hour="11"
@@ -16,7 +16,7 @@
         </LastUpdateSCM>
         <LastUpdateDTS>
             <Date
-                year="2020"
+                year="2019"
                 month="4"
                 day="20"
                 hour="13"
@@ -25,7 +25,7 @@
         </LastUpdateDTS>
         <StartingDate>
             <Date
-                year="2020"
+                year="2019"
                 month="4"
                 day="16"
                 hour="13"
