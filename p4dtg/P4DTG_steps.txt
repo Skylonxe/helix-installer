@@ -54,3 +54,8 @@ nano /opt/perforce/swarm/data/config.php
 
 curl -u "admin:admin" -X DELETE "https://swarm.ondrejhrusovsky.com/api/v9/cache/config/"
 systemctl restart apache2
+
+-----------------------
+TROUBLESHOOTING
+
+P4DTG Error: Character reference "&#x1E" is an invalid XML character - https://community.perforce.com/s/article/3577 - copy config folder again from verified working Windows P4DTG
