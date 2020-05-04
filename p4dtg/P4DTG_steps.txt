@@ -42,7 +42,7 @@ nano /opt/perforce/swarm/data/config.php
 
  'jira' => array(
         'host'      => 'https://xxxxx.atlassian.net:443', // URL for your installed JIRA web interface
-        'user'      => 'ondrej.hrus@gmail.com', // the username required for JIRA API access
+        'user'      => 'mail@mail.com', // the username required for JIRA API access
         'password'  => 'TOKEN_FOR_ATLASSIAN', // the password required for JIRA API access
         'job_field' => 'DTG_DTISSUE', // optional, if P4DTG is replicating JIRA issue IDs
                            // to a job field, list that field here
