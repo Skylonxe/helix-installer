@@ -94,12 +94,6 @@
                     value2="highest" />
             </CopyRule>
             <CopyRule
-                scm_field="UpdatedDate"
-                dts_field="Updated"
-                copy_type="DATE"
-                mirror_conflicts="DTS"
-                truncate="0" />
-            <CopyRule
                 scm_field="DueDate"
                 dts_field="Due Date"
                 copy_type="DATE"
