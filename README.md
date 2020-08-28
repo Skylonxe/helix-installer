@@ -7,6 +7,8 @@ Follow "swarm steps.txt" and "P4DTG_steps.txt" manually. Scripts are not fully a
 
 # P4DTG
 
+Config files are more up to date then config screenshots. Stick with the config files configuration.
+
 References:
 
 https://forums.perforce.com/index.php?/topic/6501-p4dtg-jira-not-working-statuscodeoptionalabsent/
