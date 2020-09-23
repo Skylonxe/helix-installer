@@ -1,0 +1,3 @@
+Add P4 Hook
+
+check-for-changes-teamcity change-commit //DepotName/... "%quote%/home/perforce/triggers/teamcity-trigger.sh%quote% %quote%vcsRoot:(type:perforce,count:99999),property:(name:stream,value://CompanyName,matchType:contains,ignoreCase:true),count:99999%quote%"
