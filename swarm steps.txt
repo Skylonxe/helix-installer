@@ -180,3 +180,7 @@ nano /opt/perforce/swarm/data/config.php
 <----- CLEAR CACHE
 
 
+-----OPTIONAL----- enable zip archiving
+https://www.perforce.com/manuals/swarm/Content/Swarm/admin.archives.html#Zip_archive
+
+
