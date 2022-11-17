@@ -61,3 +61,15 @@ TROUBLESHOOTING
 P4DTG Error: Character reference "&#x1E" is an invalid XML character - https://community.perforce.com/s/article/3577 - copy config folder again from verified working Windows P4DTG
 
 SWARM is spamming Jira ticket history every x minutes: Make sure no field is constantly updating. Copying Updated field can cause infinite loop of history updates for the tickets.
+
+Error from check_connection: [UsageError]******* WARNING P4PORT IDENTIFICATION HAS CHANGED! *******
+It is possible that someone is intercepting your connection
+to the Perforce P4PORT '0.0.0.0:1666'
+If this is not a scheduled key change, then you should contact
+your Perforce administrator.
+The fingerprint for the mismatched key sent to your client is
+XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX
+
+Usually happens after ssl perforce certificate update. Add Environment=P4TRUST=/home/perforce/p4dtg/p4trust to your p4dtg.service file. Make sure it points to your correct p4trust location. I copied p4trust from Helix Swarm from /opt/perforce/swarm/data/p4trust. There is probably a way how to generate a new one but I did not investigate.
+
+P4DTG is ignoring some tickets on restart after failure: p4dtg/config/set-JIRA.xml contains times of last P4 and JIRA pooling. It is possible these times are past the moment when P4DTG failure happened. On restart P4DTG won't check ticket changes older than dates listed there. I usually change the dates there to make sure it will go over all recent changes again (for example by changing year to previous year).
