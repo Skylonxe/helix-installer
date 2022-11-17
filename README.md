@@ -18,3 +18,5 @@ https://community.perforce.com/s/article/12196
 https://community.perforce.com/s/article/3578
 
 https://community.perforce.com/s/article/3577
+
+https://portal.perforce.com/s/article/3932
